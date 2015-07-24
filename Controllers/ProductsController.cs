@@ -267,7 +267,7 @@ namespace ePro.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int? id, string[] selectedComplinanceform)
+        public ActionResult Edit(int? id, string[] selectedComplinanceform, HttpPostedFileBase upload)
         {
 
             if (id == null)
@@ -289,7 +289,26 @@ namespace ePro.Controllers
                     //   {
                     //       instructorToUpdate.OfficeAssignment = null;
                     //   }
+                    if (upload != null && upload.ContentLength > 0)
+                    {
 
+                        if (ProductToUpdate.Files.Any(f => f.FileType == FileType.Avatar))
+                        {
+                            db.Files.Remove(ProductToUpdate.Files.First(f => f.FileType == FileType.Avatar));
+
+                        }
+                        var avatar = new File
+                        {
+                            FileName = System.IO.Path.GetFileName(upload.FileName),
+                            FileType = FileType.Avatar,
+                            ContentType = upload.ContentType
+                        };
+                        using (var reader = new System.IO.BinaryReader(upload.InputStream))
+                        {
+                            avatar.Content = reader.ReadBytes(upload.ContentLength);
+                        }
+                        ProductToUpdate.Files = new List<File> { avatar };
+                    }
                     UpdateProduct(selectedComplinanceform, ProductToUpdate);
 
                     db.SaveChanges();
