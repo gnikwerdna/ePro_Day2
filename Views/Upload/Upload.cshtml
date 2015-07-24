@@ -1,0 +1,36 @@
+﻿@model ePro.Models.ProductFile
+@{
+    ViewBag.Title = "Upload";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<h2>Upload</h2>
+
+@using (Html.BeginForm("Upload", "Upload", FormMethod.Post,
+
+          new { enctype = "multipart/form-data" }))
+
+{
+
+   @Html.LabelFor(m => m.Description)
+   <div>@Html.TextBoxFor(m => m.Description)</div>
+   
+    <input type="file" name="FileUpload1"  />
+    <input type="file" name="FileUpload2"  />
+    <input type="file" name="FileUpload3"  />
+    <input type="file" name="FileUpload4"  />
+    <input type="file" name="FileUpload5"  />
+
+    <input type="submit" value="Upload" class="btn" />
+
+
+
+    <div class="err">
+
+        @Html.ValidationSummary()
+
+    </div>
+
+}
+
